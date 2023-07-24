@@ -2,11 +2,9 @@
 A question game that creates randomized questions about digital privacy and ethics in a post-GPT world given a dataset of actors (Who), actions (How), objects or theories, and perhaps consequences (What).
 
 ## How do I play?
-With one simple command!
-```python3
-
-python3 slotGame.py
-```
+1. Open the html file in your browser
+2. Click the SPIN! button on the html page
+3. Do it again after 30 seconds
 
 ## How did you build this?
 Iteratively! I worked with Guzzo, my manager at the BKC, to scope out this project to promote curiosity and understanding of how social media promotes digital ethics. We then formulate this question game using index cards and had various 22-23 Rebooting Social Media (RSM) fellows play the game. After observing their experience and conducting interviews, we refined the game to deliver a more pleasurable user experience, created another set of playing cards and then I built out this online version of the game.
