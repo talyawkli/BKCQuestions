@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Slot Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .slot-machine {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px auto;
+            max-width: 500px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .reel {
+            width: 150px;
+            text-align: center;
+            font-size: 18px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .message {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Slot Game</h1>
+    <div class="slot-machine">
+        <div class="reel" id="reel1">---</div>
+        <div class="reel" id="reel2">---</div>
+        <div class="reel" id="reel3">---</div>
+    </div>
+    <button onclick="spinReels()">Spin</button>
+    <div class="message" id="message"></div>
+
+    <script>
+        // Read phrases from a text file
+        function readPhrasesFromFile(fileName, callback) {
+            const fileInput = new XMLHttpRequest();
+            fileInput.open("GET", fileName, true);
+            fileInput.onreadystatechange = function () {
+                if (fileInput.readyState === 4 && fileInput.status === 200) {
+                    const phrases = fileInput.responseText.split("\n").filter(phrase => phrase.trim() !== '');
+                    callback(phrases);
+                }
+            };
+            fileInput.send();
+        }
+
+        // Store the phrases for each reel in its own array
+        let reel1Phrases = [];
+        let reel2Phrases = [];
+        let reel3Phrases = [];
+
+        // Function to initialize the game
+        function initializeGame() {
+            readPhrasesFromFile("reel1.txt", function (phrases) {
+                reel1Phrases = phrases;
+            });
+
+            readPhrasesFromFile("reel2.txt", function (phrases) {
+                reel2Phrases = phrases;
+            });
+
+            readPhrasesFromFile("reel3.txt", function (phrases) {
+                reel3Phrases = phrases;
+            });
+
+            document.getElementById('message').innerText = 'Press "Spin" to play!';
+        }
+
+        // Get a random phrase from the given reel's phrases
+        function getRandomPhrase(reelPhrases) {
+            return reelPhrases[Math.floor(Math.random() * reelPhrases.length)];
+        }
+
+        // Modify spinReels() function to use phrases from different files for each reel
+        function spinReels() {
+            if (reel1Phrases.length === 0 || reel2Phrases.length === 0 || reel3Phrases.length === 0) {
+                // Read phrases from the files if not loaded already
+                initializeGame();
+                return;
+            }
+
+            const reel1 = getRandomPhrase(reel1Phrases);
+            const reel2 = getRandomPhrase(reel2Phrases);
+            const reel3 = getRandomPhrase(reel3Phrases);
+
+            document.getElementById('reel1').innerText = reel1;
+            document.getElementById('reel2').innerText = reel2;
+            document.getElementById('reel3').innerText = reel3;
+
+            // Clear the previous result after 30 seconds
+            setTimeout(clearResult, 30000);
+        }
+
+        // Function to clear the result after 30 seconds
+        function clearResult() {
+            document.getElementById('reel1').innerText = '---';
+            document.getElementById('reel2').innerText = '---';
+            document.getElementById('reel3').innerText = '---';
+        }
+    </script>
+</body>
+</html>
