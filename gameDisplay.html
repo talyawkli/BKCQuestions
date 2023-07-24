@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Slot Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .slot-machine {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px auto;
+            max-width: 500px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .reel {
+            width: 150px;
+            text-align: center;
+            font-size: 18px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .message {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Slot Game</h1>
+    <div class="slot-machine">
+        <div class="reel" id="reel1">---</div>
+        <div class="reel" id="reel2">---</div>
+        <div class="reel" id="reel3">---</div>
+    </div>
+    <button onclick="spinReels()">Spin</button>
+    <div class="message" id="message"></div>
+
+    <script src="slot-game.js"></script>
+</body>
+</html>
