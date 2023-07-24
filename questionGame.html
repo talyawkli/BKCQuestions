@@ -43,25 +43,57 @@
     <div class="message" id="message"></div>
 
     <script>
-        // Read phrases from a text file
+        // Read phrases from a text file and cache them
         function readPhrasesFromFile(fileName, callback) {
-            const fileInput = new XMLHttpRequest();
-            fileInput.open("GET", fileName, true);
-            fileInput.onreadystatechange = function () {
-                if (fileInput.readyState === 4 && fileInput.status === 200) {
-                    const phrases = fileInput.responseText.split("\n").filter(phrase => phrase.trim() !== '');
-                    callback(phrases);
-                }
-            };
-            fileInput.send();
+            if (readPhrasesFromFile.cache[fileName]) {
+                callback(readPhrasesFromFile.cache[fileName]);
+            } else {
+                const fileInput = new XMLHttpRequest();
+                fileInput.open("GET", fileName, true);
+                fileInput.onreadystatechange = function () {
+                    if (fileInput.readyState === 4 && fileInput.status === 200) {
+                        const phrases = fileInput.responseText.split("\n").filter(phrase => phrase.trim() !== '');
+                        readPhrasesFromFile.cache[fileName] = phrases;
+                        callback(phrases);
+                    }
+                };
+                fileInput.send();
+            }
         }
 
-        // Store the phrases for each reel in its own array
-        let reel1Phrases = [];
-        let reel2Phrases = [];
-        let reel3Phrases = [];
+        // Create cache object to store phrases for each file
+        readPhrasesFromFile.cache = {};
 
-        // Function to initialize the game
+        // Modify spinReels() function to use cached phrases from different files for each reel
+        function spinReels() {
+            if (!reel1Phrases.length || !reel2Phrases.length || !reel3Phrases.length) {
+                // Read phrases from the files if not loaded already
+                initializeGame();
+                return;
+            }
+
+            const reel1 = getRandomPhrase(reel1Phrases);
+            const reel2 = getRandomPhrase(reel2Phrases);
+            const reel3 = getRandomPhrase(reel3Phrases);
+
+            document.getElementById('reel1').innerText = reel1;
+            document.getElementById('reel2').innerText = reel2;
+            document.getElementById('reel3').innerText = reel3;
+
+            // Reset the game by clearing results
+            setTimeout(clearResult, 30000);
+        }
+
+        // Rest of the code remains unchanged
+
+        // Clear the result after 30 seconds
+        function clearResult() {
+            document.getElementById('reel1').innerText = '---';
+            document.getElementById('reel2').innerText = '---';
+            document.getElementById('reel3').innerText = '---';
+        }
+
+        // Initialize the game and load phrases from text files
         function initializeGame() {
             readPhrasesFromFile("reel1.txt", function (phrases) {
                 reel1Phrases = phrases;
@@ -76,38 +108,6 @@
             });
 
             document.getElementById('message').innerText = 'Press "Spin" to play!';
-        }
-
-        // Get a random phrase from the given reel's phrases
-        function getRandomPhrase(reelPhrases) {
-            return reelPhrases[Math.floor(Math.random() * reelPhrases.length)];
-        }
-
-        // Modify spinReels() function to use phrases from different files for each reel
-        function spinReels() {
-            if (reel1Phrases.length === 0 || reel2Phrases.length === 0 || reel3Phrases.length === 0) {
-                // Read phrases from the files if not loaded already
-                initializeGame();
-                return;
-            }
-
-            const reel1 = getRandomPhrase(reel1Phrases);
-            const reel2 = getRandomPhrase(reel2Phrases);
-            const reel3 = getRandomPhrase(reel3Phrases);
-
-            document.getElementById('reel1').innerText = reel1;
-            document.getElementById('reel2').innerText = reel2;
-            document.getElementById('reel3').innerText = reel3;
-
-            // Clear the previous result after 30 seconds
-            setTimeout(clearResult, 30000);
-        }
-
-        // Function to clear the result after 30 seconds
-        function clearResult() {
-            document.getElementById('reel1').innerText = '---';
-            document.getElementById('reel2').innerText = '---';
-            document.getElementById('reel3').innerText = '---';
         }
     </script>
 </body>
